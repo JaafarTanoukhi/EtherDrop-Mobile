@@ -42,6 +42,10 @@ jobs:
       - name: Prepare version and release notes
         id: prepare
         run: python scripts/prepare_release.py
+      - name: Generate README download QR
+        run: |
+          python -m pip install -r scripts/qr-requirements.txt
+          python scripts/generate_download_qr.py
       - name: Generate Android project
         env:
           EXPO_NO_TELEMETRY: '1'
@@ -74,7 +78,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app.json package.json package-lock.json RELEASE_NOTES.md src/release-notes.json
+          git add app.json package.json package-lock.json RELEASE_NOTES.md src/release-notes.json assets/download-qr.png
           if ! git diff --cached --quiet; then
             git commit -m "chore: release v$RELEASE_VERSION"
           fi
@@ -88,4 +92,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_VERSION: ${{ steps.prepare.outputs.version }}
-        run: gh release create "v$RELEASE_VERSION" dist/EtherDrop.apk --verify-tag --title "EtherDrop Mobile v$RELEASE_VERSION" --notes-file RELEASE_NOTES.md --latest
+        run: |
+          cp RELEASE_NOTES.md dist/release-notes.md
+          cat >> dist/release-notes.md <<'EOF'
+
+          ## Download on Android
+
+          Scan or click the QR code to download the latest EtherDrop APK.
+
+          [![Download EtherDrop APK](https://raw.githubusercontent.com/JaafarTanoukhi/EtherDrop-Mobile/main/assets/download-qr.png)](https://github.com/JaafarTanoukhi/EtherDrop-Mobile/releases/latest/download/EtherDrop.apk)
+          EOF
+          gh release create "v$RELEASE_VERSION" dist/EtherDrop.apk --verify-tag --title "EtherDrop Mobile v$RELEASE_VERSION" --notes-file dist/release-notes.md --latest

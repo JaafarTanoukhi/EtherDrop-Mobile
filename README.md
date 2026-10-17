@@ -4,11 +4,15 @@ The Android subset of EtherDrop Desktop 2.0. It reuses the desktop Wi-Fi theme, 
 
 The app sends and receives files and folders directly between Android and Windows, or between Android devices, on the same Wi-Fi network or hotspot. There is no Ethernet option. iPhone support remains on hold.
 
-The source now includes a GitHub APK updater and the native startup-error fix. The existing APK links below predate those changes. A new APK build and Android installer test remain pending the user's approval.
+Standalone releases include the GitHub APK updater and the native startup-error fix. The development APK linked below predates those changes.
 
 ## Install on your Android phone
 
-The Android APK built successfully on October 17, 2026. [Download the APK](https://expo.dev/artifacts/eas/scajZTQyJAjxsp6mc-ylkyWAGhFuidBRyU2jrK5uBk4.apk), or open the [Android build page](https://expo.dev/accounts/jaafar-tanoukhis-team/projects/jaafar-tanoukhi/builds/6713baf6-2be7-4643-9b35-00d046a0c4da).
+[Download the latest Android APK](https://github.com/JaafarTanoukhi/EtherDrop-Mobile/releases/latest/download/EtherDrop.apk), or scan this QR code with your phone's camera to download it directly:
+
+[![Scan to download the latest EtherDrop Android APK](assets/download-qr.png)](https://github.com/JaafarTanoukhi/EtherDrop-Mobile/releases/latest/download/EtherDrop.apk)
+
+The QR code always points to the latest published APK, so saved copies keep working after new releases.
 
 1. Open the APK download link on your Android phone and download the file.
 2. Open the downloaded APK. If Android asks, allow **Install unknown apps** for the browser or file manager you used, then tap **Install**.
@@ -70,7 +74,7 @@ A newer release must contain **EtherDrop.apk**. The app shows its version, notes
 
 After downloading, Android opens its installer. The first time, allow installations from EtherDrop in system settings, return, and tap **Install update**. Confirm the update in Android and reopen EtherDrop. New-version notes are bundled for offline viewing and appear once per installed app version.
 
-Update controls and offers appear only on Home, so an update is not installed during an active transfer. The updater requires the next native APK; the existing development client can preview the update UI but cannot test the new native download/installer functions.
+Update controls and offers appear only on Home, so an update is not installed during an active transfer. The existing development client can preview the update UI but cannot test the new native download/installer functions; use the latest standalone APK for those.
 
 ## Branches and release versions
 
@@ -83,6 +87,8 @@ The workflow commits the prepared version on release, merges it into main while 
 The initial setup push uses **[skip ci]** so creating the release branch does not build or publish an APK. The first publication needs an explicit workflow run or a later normal release-branch push.
 
 The release job compiles directly on GitHub's Ubuntu runner using Node.js, JDK 21, and the runner's Android SDK. It runs `expo prebuild`, signs a release APK with the existing Android key, and publishes it to GitHub Releases. It does not use an Expo build allowance or require `EXPO_TOKEN`. The Android tools stay on GitHub's servers.
+
+Each release regenerates `assets/download-qr.png` for the README and includes the QR in its release description. The image encodes the stable latest-APK download URL. To regenerate it locally, run `python -m pip install -r scripts/qr-requirements.txt`, then `python scripts/generate_download_qr.py`. These small Python packages are release tools, not app dependencies.
 
 Signing uses four Actions repository secrets: `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`. These contain the same key already managed by EAS for this Android package. Keep the EAS key as well so future EAS development builds remain compatible. The workflow decodes the key only into the runner's temporary directory and removes it after the build.
 
