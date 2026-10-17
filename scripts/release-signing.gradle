@@ -1,0 +1,17 @@
+
+// Appended to the generated Android app Gradle file by the GitHub release job.
+android {
+    signingConfigs {
+        githubRelease {
+            storeFile file(System.getenv('ANDROID_KEYSTORE_PATH'))
+            storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')
+            keyAlias System.getenv('ANDROID_KEY_ALIAS')
+            keyPassword System.getenv('ANDROID_KEY_PASSWORD')
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.githubRelease
+        }
+    }
+}

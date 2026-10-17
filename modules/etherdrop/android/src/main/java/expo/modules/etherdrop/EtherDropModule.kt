@@ -22,6 +22,7 @@ import java.util.concurrent.CompletableFuture
 class EtherDropModule : Module() {
   private lateinit var engine: EtherDropEngine
   private lateinit var storage: AndroidStorage
+  private lateinit var updater: AndroidUpdater
   private var picker: Promise? = null
   private var pickerKind = ""
   private var conflict: CompletableFuture<String>? = null
@@ -29,9 +30,10 @@ class EtherDropModule : Module() {
 
   override fun definition() = ModuleDefinition {
     Name("EtherDrop")
-    Events("onState", "onConflict")
+    Events("onState", "onConflict", "onUpdateProgress")
 
     OnCreate {
+      updater = AndroidUpdater(context) { progress -> sendEvent("onUpdateProgress", progress) }
       storage = AndroidStorage(context) { path ->
         val answer = CompletableFuture<String>()
         conflict = answer
@@ -44,6 +46,10 @@ class EtherDropModule : Module() {
       EtherDropService.engine = engine
     }
     AsyncFunction("getState") { engine.snapshot().toString() }
+    AsyncFunction("getSeenVersion") { updater.seenVersion() }
+    AsyncFunction("markVersionSeen") { version: String -> updater.markSeen(version) }
+    AsyncFunction("downloadUpdate") { release: String, promise: Promise -> updater.download(release, promise) }
+    AsyncFunction("installUpdate") { updater.install() }.runOnQueue(Queues.MAIN)
     AsyncFunction("start") { role: String ->
       check(role == "sender" || role == "receiver") { "Choose Send or Receive." }
       try {
@@ -103,6 +109,7 @@ class EtherDropModule : Module() {
       clipboard.setPrimaryClip(ClipData.newPlainText("EtherDrop diagnostics", text))
     }
     OnDestroy {
+      updater.close()
       conflict?.complete("skip")
       picker?.reject("CLOSED", "EtherDrop closed.", null)
       engine.close()

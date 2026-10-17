@@ -7,7 +7,11 @@
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
   <application>
+    <provider android:name="expo.modules.etherdrop.EtherDropUpdateProvider" android:authorities="${applicationId}.updates" android:exported="false" android:grantUriPermissions="true">
+      <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/etherdrop_update_paths" />
+    </provider>
     <service android:name="expo.modules.etherdrop.EtherDropService" android:exported="false" android:foregroundServiceType="connectedDevice" />
   </application>
 </manifest>

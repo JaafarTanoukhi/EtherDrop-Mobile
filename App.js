@@ -3,6 +3,7 @@ import { Alert, Animated, BackHandler, Modal, PermissionsAndroid, Platform, Pres
   ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import EtherDrop from './modules/etherdrop';
+import Updater from './src/Updater';
 import { Button, Card, Icon, Label, Progress, Title, Toggle, WifiBadge, bytes, colors, duration, styles as s } from './src/ui';
 
 const initialState = { role: '', network: null, error: '', peers: [], transfers: [] };
@@ -153,6 +154,7 @@ export default function App() {
   return <SafeAreaProvider><SafeAreaView style={s.screen}><StatusBar barStyle="dark-content" backgroundColor={colors.bg} />
     <Animated.View style={[a.container, { opacity }]}><ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={s.scroll}>
       {Platform.OS === 'web' && <Label style={a.small}>UI preview · file transfers run in the Android app</Label>}
+      <Updater home={page === 'home'} />
       {page === 'home' && <><Text accessibilityRole="header" style={s.hero}>EtherDrop</Text><Label>Send and receive files nearby.</Label>
         <View style={a.connectionIntro}><Label>Connection</Label><View style={s.badgeSegment}><WifiBadge /></View><Label>Connect every device to the same Wi-Fi network.</Label></View>
         <Text accessibilityRole="header" style={a.sectionTitle}>Start a transfer</Text>

@@ -4,6 +4,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
     "start": "expo start --dev-client --lan",
     "start:offline": "expo start --dev-client --offline",
     "android:build:dev": "eas build --platform android --profile development",

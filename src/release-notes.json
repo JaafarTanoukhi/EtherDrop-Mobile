@@ -1,0 +1,4 @@
+{
+  "version": "1.0.0",
+  "notes": "What's new in EtherDrop Mobile v1.0.0\n\n- Share files and folders with Windows and Android devices on the same Wi-Fi network or hotspot.\n- Approve incoming files, choose a destination, and follow transfer progress and diagnostics.\n- Continue transfers in the background, with reconnection and optional SHA-256 verification.\n- Check for GitHub releases, review update notes and download size, and approve APK downloads inside the app.\n- Install updates through Android's installer and view release notes after updating.\n- Fix the incorrect startup error when choosing Send files or Receive files."
+}

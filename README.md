@@ -2,7 +2,9 @@
 
 The Android subset of EtherDrop Desktop 2.0. It reuses the desktop Wi-Fi theme, icons, screen names, transfer options, approval flow, progress metrics, and diagnostics, with layouts sized for phones.
 
-The app sends and receives files and folders directly between Android and Windows, or between Android devices, on the same Wi-Fi network or hotspot. There is no Ethernet option or mobile update checker. iPhone support remains on hold.
+The app sends and receives files and folders directly between Android and Windows, or between Android devices, on the same Wi-Fi network or hotspot. There is no Ethernet option. iPhone support remains on hold.
+
+The source now includes a GitHub APK updater and the native startup-error fix. The existing APK links below predate those changes. A new APK build and Android installer test remain pending the user's approval.
 
 ## Install on your Android phone
 
@@ -60,12 +62,39 @@ The project is linked to Expo project `b97e20ad-a770-4094-950d-40c48973bb05`, ow
 3. Run `npm run android:build`.
 4. When the build finishes, open its new download link on your phone to install the updated APK.
 
+## In-app updates
+
+The Home screen displays the installed build's version and **Check for updates**. EtherDrop checks the latest public release from `JaafarTanoukhi/EtherDrop-Mobile` at startup; automatic check failures stay quiet so offline transfers continue normally. Manual checks report errors or show the bundled release notes when no update is available.
+
+A newer release must contain **EtherDrop.apk**. The app shows its version, notes, and download size, and downloads only after approval. Downloads display progress and speed, check the expected size and GitHub's SHA-256 digest when provided, and validate that the APK belongs to this package and has a newer Android version code. Android verifies the signing certificate during installation.
+
+After downloading, Android opens its installer. The first time, allow installations from EtherDrop in system settings, return, and tap **Install update**. Confirm the update in Android and reopen EtherDrop. New-version notes are bundled for offline viewing and appear once per installed app version.
+
+Update controls and offers appear only on Home, so an update is not installed during an active transfer. The updater requires the next native APK; the existing development client can preview the update UI but cannot test the new native download/installer functions.
+
+## Branches and release versions
+
+Work on **main**. Pushing main does not publish an APK. After the user approves publication, push main first, fast-forward **release** from main, push release, and return the local checkout to main. A normal push to release or a manual **Release EtherDrop Mobile** workflow run creates a standalone APK and GitHub Release.
+
+The release script selects the next patch version automatically. An explicit higher major/minor version in `app.json` takes precedence. It synchronizes `app.json`, `package.json`, `package-lock.json`, and bundled release notes, and increases Android's `versionCode` beyond previous builds. Keep the Android package and signing key unchanged so users can update in place.
+
+The workflow commits the prepared version on release, merges it into main while preserving newer main changes, and atomically pushes both branches and the version tag. The GitHub release contains `EtherDrop.apk` and `RELEASE_NOTES.md`. If the notes are unchanged since the previous release, commit subjects become the new notes. Pull the workflow's version commit after publication.
+
+The initial setup push uses **[skip ci]** so creating the release branch does not build or publish an APK. The first publication needs an explicit workflow run or a later normal release-branch push.
+
+The release job compiles directly on GitHub's Ubuntu runner using Node.js, JDK 21, and the runner's Android SDK. It runs `expo prebuild`, signs a release APK with the existing Android key, and publishes it to GitHub Releases. It does not use an Expo build allowance or require `EXPO_TOKEN`. The Android tools stay on GitHub's servers.
+
+Signing uses four Actions repository secrets: `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`. These contain the same key already managed by EAS for this Android package. Keep the EAS key as well so future EAS development builds remain compatible. The workflow decodes the key only into the runner's temporary directory and removes it after the build.
+
 ## iPhone support
 
 An iPhone version can share these React screens and the V3 protocol. It needs an iOS networking/storage implementation inside this project. EAS internal distribution to a real iPhone requires a paid Apple Developer membership and registered test devices. No iOS app is currently implemented or built.
 
 ## Checks
 
+- `npm test` checks release selection and GitHub update responses without downloading APKs.
+- `python -m unittest discover -s tests -p test_release.py -v` checks release versions, Android version codes, package/lock synchronization, and bundled notes.
+- `python -m unittest discover -s tests -p test_updater_download.py -v` uses JDK 21 (`JAVA_HOME`) and a local HTTP server to check the real native download code, integrity, progress, and cleanup. It does not build an APK.
 - `npm run check` checks dependency compatibility.
 - `npm run export:android` validates the Android JavaScript bundle. This creates a JavaScript export, not an APK, and does not compile the native module.
 - `npx expo-modules-autolinking resolve --platform android` checks native-module discovery.
