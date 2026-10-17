@@ -1,0 +1,26 @@
+{
+  "name": "etherdrop-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start --dev-client --lan",
+    "start:offline": "expo start --dev-client --offline",
+    "android:build:dev": "eas build --platform android --profile development",
+    "android:build": "eas build --platform android --profile preview",
+    "check": "expo install --check",
+    "export:android": "expo export --platform android"
+  },
+  "dependencies": {
+    "expo": "~57.0.30",
+    "expo-dev-client": "~57.0.20",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0"
+  },
+  "devDependencies": {
+    "eas-cli": "25.1.1",
+    "react-dom": "19.2.3",
+    "react-native-web": "^0.21.2"
+  }
+}

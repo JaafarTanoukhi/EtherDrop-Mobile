@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "EtherDrop",
+    "slug": "jaafar-tanoukhi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "icon": "./assets/etherdrop-logo.png",
+    "platforms": [
+      "android",
+      "web"
+    ],
+    "android": {
+      "package": "com.etherdrop.androidexample",
+      "versionCode": 3,
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_MEDIA_AUDIO"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b97e20ad-a770-4094-950d-40c48973bb05"
+      }
+    },
+    "owner": "jaafar-tanoukhis-team"
+  }
+}

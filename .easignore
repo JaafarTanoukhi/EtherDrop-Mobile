@@ -1,0 +1,11 @@
+node_modules/
+.expo/
+.npm-cache/
+dist/
+.git/
+*.apk
+README.md
+DOWNLOAD_USAGE.json
+tests/
+scripts/
+__pycache__/

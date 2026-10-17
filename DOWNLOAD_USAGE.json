@@ -1,0 +1,7 @@
+{
+  "snapshot_stage": "Initial ringtone-example installation, before later native-module scaffolding and browser-preview dependencies.",
+  "cached_package_archive_bytes": 131864560,
+  "cached_package_archive_count": 768,
+  "cached_metadata_bytes_uncompressed": 313554738,
+  "note": "Archive bytes count cached compressed npm package downloads. This is not an exact internet traffic measurement; metadata compression, headers, retries, and the future APK download are not included."
+}

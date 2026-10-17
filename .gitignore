@@ -1,0 +1,12 @@
+node_modules/
+.expo/
+.npm-cache/
+dist/
+/android/
+*.apk
+*.jks
+*.keystore
+credentials.json
+.env.local
+.env.*.local
+__pycache__/
